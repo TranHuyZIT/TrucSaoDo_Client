@@ -1,26 +1,36 @@
 import "./NhapSo.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
+import { getAllViPham } from "../../utils/apiRequest";
 interface Item {
   key: string;
   day: number;
   tenHS: string;
-  nn1?: number;
-  nn2?: number;
-  nn3?: number;
-  v1?: number;
-  v2?: number;
-  vs1?: number;
-  vs2?: number;
+  1_1?: number;
+  1_2?: number;
+  1_3?: number;
+  1_4?: number;
+  1_5?: number;
+  3_1?: number;
+  3_2?: number;
+  2_1?: number;
+  2_2?: number;
+  2_3?: number;
+  2_4?: number;
+}
+interface vp {
+  VP_MA: number;
+  TEN: string;
+  DIEM_TRU: number;
+  LVP_MA: number;
 }
 
-const originData = [];
+const originData: Item[] = [];
 for (let i = 2; i <= 6; i++) {
   originData.push({
     key: i.toString(),
     day: i,
     tenHS: "Trần Gia Huy",
-    nn2: 0,
   });
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -69,8 +79,15 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 const SoCoDo: React.FC = () => {
   const [form] = Form.useForm();
+  const [vipham, setVipham] = useState([]);
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState("");
+
+  useEffect(() => {
+    if (vipham.length == 0) {
+      getAllViPham(setVipham);
+    }
+  }, []);
 
   const isEditing = (record: Item) => record.key === editingKey;
 
@@ -120,49 +137,33 @@ const SoCoDo: React.FC = () => {
       width: "35%",
       editable: true,
       children: [
+        ...vipham
+          .filter((vp: vp) => vp.LVP_MA == 1)
+          .map((vp: vp) => {
+            return {
+              title: vp.TEN,
+              dataIndex: `${vp.LVP_MA}_${vp.VP_MA}`,
+              width: "5%",
+              editable: true,
+            };
+          }),
         {
-          title: "Đồng phục, khăn quàng",
+          title: "VẮNG",
           dataIndex: "",
-          width: "5%",
-          editable: true,
-        },
-        {
-          title: "Đi trễ",
-          dataIndex: "",
-          width: "5%",
-          editable: true,
-        },
-        {
-          title: "Xếp hàng, Ồn 15' đầu giờ",
-          dataIndex: "",
-          width: "5%",
-          editable: true,
-        },
-        {
-          title: "Vắng",
-          dataIndex: "",
-          width: "5%",
-          editable: true,
+          width: "10%",
+          editable: false,
           children: [
-            {
-              title: "Phép",
-              dataIndex: "",
-              width: "5%",
-              editable: true,
-            },
-            {
-              title: "Không",
-              dataIndex: "",
-              width: "5%",
-              editable: true,
-            },
+            ...vipham
+              .filter((vp: vp) => vp.LVP_MA == 3)
+              .map((vp: vp) => {
+                return {
+                  title: vp.TEN,
+                  dataIndex: `${vp.LVP_MA}_${vp.VP_MA}`,
+                  width: "5%",
+                  editable: true,
+                };
+              }),
           ],
-        },
-        {
-          title: "Sinh hoạt tập trung",
-          dataIndex: "",
-          width: "5%",
-          editable: true,
         },
       ],
     },
@@ -172,18 +173,16 @@ const SoCoDo: React.FC = () => {
       width: "40%",
       editable: true,
       children: [
-        {
-          title: "Không Vệ Sinh",
-          dataIndex: "",
-          width: "5%",
-          editable: true,
-        },
-        {
-          title: "Vệ sinh trễ, sơ sài",
-          dataIndex: "",
-          width: "5%",
-          editable: true,
-        },
+        ...vipham
+          .filter((vp: vp) => vp.LVP_MA == 2)
+          .map((vp: vp) => {
+            return {
+              title: vp.TEN,
+              dataIndex: `${vp.LVP_MA}_${vp.VP_MA}`,
+              width: "5%",
+              editable: true,
+            };
+          }),
       ],
     },
     {
