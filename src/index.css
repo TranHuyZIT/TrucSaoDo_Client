@@ -18,6 +18,7 @@ code {
 :root {
   --darkblue: #04246b;
   --primaryblue: #7ba4e9;
+  --greydarkblue: #344472;
 }
 .content-container {
   margin-top: 60px;

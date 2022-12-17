@@ -10,7 +10,7 @@ import {
   getAllTuan,
 } from "../../utils/apiRequest";
 
-export default function NhapSo() {
+export default function TraCuuSo() {
   const [lopList, setLopList] = useState<lop[]>([]);
   const [tuanList, setTuanList] = useState<tuan[]>([]);
 
