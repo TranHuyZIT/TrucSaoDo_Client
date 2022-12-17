@@ -21,8 +21,10 @@ export interface scdDataInfo {
 
 export interface scdDataDay {
   day: number;
+  tenHS: string;
   vipham: {
     NGAY: string;
+    LVP_MA: number;
     VP_MA: number;
     MA_SO: number;
     SO_LUONG: number;
@@ -34,8 +36,8 @@ export interface Item {
   key: string;
   day: number;
   tenHS: string;
-  data?: {
-    [lvp_vp: string]: number;
+  data: {
+    [key: string]: number;
   };
 }
 export interface vp {
@@ -47,4 +49,9 @@ export interface vp {
 
 export interface SoCoDoProps {
   info: scdDataInfo;
+  titleInfo: TitleInfo;
+}
+export interface TitleInfo {
+  tenLop: string;
+  tuan: number;
 }

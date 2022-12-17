@@ -1,0 +1,41 @@
+.socodo {
+  max-width: 100%;
+}
+.search-container {
+  display: flex;
+  column-gap: 8px;
+  margin: 16px 0;
+}
+.so-container th {
+  margin: auto;
+  text-align: center !important;
+}
+.operation-link {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.empty-result-text {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+.add-scd-container {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+.socodo-title-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 8px;
+  margin: 16px 0;
+}
+.socodo-heading-container h1 {
+  text-align: center;
+}
+.socodo-time-container h2 {
+  text-align: center;
+  font-weight: 500;
+}

@@ -1,6 +1,6 @@
-import { Col, Row, Button } from "antd";
-import { lop, tuan, scdData } from "./interface";
-import { SearchOutlined } from "@ant-design/icons";
+import { Col, Row, Button, message } from "antd";
+import { lop, tuan, scdData, TitleInfo } from "./interface";
+import { SearchOutlined, FileAddOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
 import SoCoDo from "./SoCoDo";
@@ -21,7 +21,24 @@ export default function NhapSo() {
     msg: "unset",
     info: { ngayBD: "", ngayKT: "", result: [] },
   });
+  const [titleInfo, setTitleInfo] = useState<TitleInfo>({
+    tenLop: "",
+    tuan: 0,
+  });
+  const [messageApi, contextHolder] = message.useMessage();
 
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "Tìm thấy sổ cờ đỏ",
+    });
+  };
+  const error = () => {
+    messageApi.open({
+      type: "error",
+      content: "Không tìm thấy sổ nào được tạo",
+    });
+  };
   const handleChange = (
     value: string,
     setSelected: React.Dispatch<React.SetStateAction<string>>
@@ -31,6 +48,10 @@ export default function NhapSo() {
 
   const handleSearch = () => {
     findSoAndAllDetails(selectedLop, selectedTuan, setSCDData);
+    setTitleInfo({
+      tenLop: selectedLop,
+      tuan: +selectedTuan,
+    });
   };
 
   useEffect(() => {
@@ -38,8 +59,14 @@ export default function NhapSo() {
     getAllTuan(setTuanList);
   }, []);
 
+  useEffect(() => {
+    if (scdData.msg == "Suceeded") success();
+    else if (scdData.msg == "Not Found") error();
+  }, [scdData]);
+
   return (
     <div className="content-container">
+      {contextHolder}
       <div className="search-container">
         <Select
           placeholder="Chọn Lớp"
@@ -77,7 +104,20 @@ export default function NhapSo() {
         </Button>
       </div>
       <div className="so-container">
-        <SoCoDo info={scdData?.info} />
+        {scdData.msg === "Suceeded" ? (
+          <SoCoDo titleInfo={titleInfo} info={scdData?.info} />
+        ) : (
+          scdData.msg !== "unset" && (
+            <div>
+              <div className="empty-result-text">Không Có Dữ Liệu</div>
+              <div className="add-scd-container">
+                <Button type="primary" icon={<FileAddOutlined />}>
+                  Tạo
+                </Button>
+              </div>
+            </div>
+          )
+        )}
       </div>
     </div>
   );

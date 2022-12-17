@@ -36,7 +36,7 @@ export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
     if (soResult.data.length == 0) {
       if (setLoading) setLoading(false);
       if (setData) setData({ msg: "Not Found", info: null });
-      return;
+      return false;
     }
     const chiTietSoResult = await axios.get(
       `http://localhost:8800/socodo/chitietscd?ma_so=${soResult.data[0].MA_SO}`,
@@ -51,17 +51,16 @@ export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
       const ctViPhamResult = await axios.get(
         `http://localhost:8800/chitietvipham?ngay=${date}&ma_so=${chitietSo.MA_SO}`
       );
-      if (ctViPhamResult.data.length > 0) {
-        result.push({
-          day: (dateObj.getDay() + 1) % 7,
-          vipham: ctViPhamResult.data.map((ctvp) => {
-            return {
-              ...ctvp,
-              NGAY: date,
-            };
-          }),
-        });
-      }
+      result.push({
+        day: (dateObj.getDay() + 1) % 7,
+        tenHS: chitietSo.TEN_HS_TRUC,
+        vipham: ctViPhamResult.data.map((ctvp) => {
+          return {
+            ...ctvp,
+            NGAY: date,
+          };
+        }),
+      });
     }
     result = {
       msg: "Suceeded",
@@ -73,6 +72,7 @@ export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
     };
     if (setLoading) setLoading(false);
     if (setData) setData(result);
+    return true;
   } catch (error) {
     console.log(error);
   }

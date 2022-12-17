@@ -12,10 +12,10 @@ export default function Navbar() {
       </div>
       <div className="nav-menu-container">
         <div className="nav-link-container active">
-          <a>Nhập Sổ</a>
+          <a>Tra Cứu Sổ</a>
         </div>
         <div className="nav-link-container">
-          <a>Tra Cứu Sổ</a>
+          <a>Nhập Sổ</a>
         </div>
         <div className="nav-link-container">
           <a>Xem thống Kê</a>
