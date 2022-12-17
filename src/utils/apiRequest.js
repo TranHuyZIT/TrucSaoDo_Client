@@ -1,4 +1,5 @@
 import axios from "axios";
+import { convertDateString } from "./commonUtils";
 export const getAllViPham = async (setData) => {
   try {
     const result = await axios.get("http://localhost:8800/category/vipham");
@@ -28,10 +29,15 @@ export const getAllTuan = async (setData) => {
 };
 export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
   try {
+    if (setLoading) setLoading(true);
     const soResult = await axios.get(
       `http://localhost:8800/socodo/search?l_ten=${l_ten}&tuan=${tuan}`
     );
-    if (!soResult.data[0].MA_SO) return { msg: "Not Found" };
+    if (soResult.data.length == 0) {
+      if (setLoading) setLoading(false);
+      if (setData) setData({ msg: "Not Found", info: null });
+      return;
+    }
     const chiTietSoResult = await axios.get(
       `http://localhost:8800/socodo/chitietscd?ma_so=${soResult.data[0].MA_SO}`,
       { ma_so: soResult.data[0].MA_SO }
@@ -57,7 +63,15 @@ export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
         });
       }
     }
-    console.log(result);
+    result = {
+      msg: "Suceeded",
+      info: {
+        ngayBD: convertDateString(soResult.data[0].NGAY_BD),
+        ngayKT: convertDateString(soResult.data[0].NGAY_KT),
+        result,
+      },
+    };
+    if (setLoading) setLoading(false);
     if (setData) setData(result);
   } catch (error) {
     console.log(error);

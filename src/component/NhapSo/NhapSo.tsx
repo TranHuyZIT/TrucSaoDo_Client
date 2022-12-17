@@ -1,4 +1,5 @@
 import { Col, Row, Button } from "antd";
+import { lop, tuan, scdData } from "./interface";
 import { SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
@@ -9,25 +10,6 @@ import {
   getAllTuan,
 } from "../../utils/apiRequest";
 
-interface tuan {
-  TUAN: number;
-}
-
-interface lop {
-  L_TEN: string;
-  KHOI: number;
-}
-
-interface scdData {
-  day: number;
-  vipham: {
-    NGAY: string;
-    VP_MA: number;
-    MA_SO: number;
-    SO_LUONG: number;
-  }[];
-}
-
 export default function NhapSo() {
   const [lopList, setLopList] = useState<lop[]>([]);
   const [tuanList, setTuanList] = useState<tuan[]>([]);
@@ -35,7 +17,10 @@ export default function NhapSo() {
   const [selectedLop, setSelectedLop] = useState<string>("");
   const [selectedTuan, setSelectedTuan] = useState<string>("");
 
-  const [scdData, setSCDData] = useState<scdData[]>([]);
+  const [scdData, setSCDData] = useState<scdData>({
+    msg: "unset",
+    info: { ngayBD: "", ngayKT: "", result: [] },
+  });
 
   const handleChange = (
     value: string,
@@ -49,8 +34,9 @@ export default function NhapSo() {
   };
 
   useEffect(() => {
-    console.log(scdData);
-  }, [scdData]);
+    getAllLop(setLopList);
+    getAllTuan(setTuanList);
+  }, []);
 
   return (
     <div className="content-container">
@@ -91,7 +77,7 @@ export default function NhapSo() {
         </Button>
       </div>
       <div className="so-container">
-        <SoCoDo />
+        <SoCoDo info={scdData?.info} />
       </div>
     </div>
   );
