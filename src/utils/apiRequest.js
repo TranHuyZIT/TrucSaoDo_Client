@@ -57,6 +57,7 @@ export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
         });
       }
     }
+    console.log(result);
     if (setData) setData(result);
   } catch (error) {
     console.log(error);

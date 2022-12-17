@@ -18,22 +18,39 @@ interface lop {
   KHOI: number;
 }
 
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
+interface scdData {
+  day: number;
+  vipham: {
+    NGAY: string;
+    VP_MA: number;
+    MA_SO: number;
+    SO_LUONG: number;
+  }[];
+}
 
 export default function NhapSo() {
   const [lopList, setLopList] = useState<lop[]>([]);
   const [tuanList, setTuanList] = useState<tuan[]>([]);
 
+  const [selectedLop, setSelectedLop] = useState<string>("");
+  const [selectedTuan, setSelectedTuan] = useState<string>("");
+
+  const [scdData, setSCDData] = useState<scdData[]>([]);
+
+  const handleChange = (
+    value: string,
+    setSelected: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setSelected(value);
+  };
+
   const handleSearch = () => {
-    findSoAndAllDetails("1-1", 1);
+    findSoAndAllDetails(selectedLop, selectedTuan, setSCDData);
   };
 
   useEffect(() => {
-    getAllLop(setLopList);
-    getAllTuan(setTuanList);
-  }, []);
+    console.log(scdData);
+  }, [scdData]);
 
   return (
     <div className="content-container">
@@ -41,7 +58,9 @@ export default function NhapSo() {
         <Select
           placeholder="Chọn Lớp"
           style={{ width: 120 }}
-          onChange={handleChange}
+          onChange={(value) => {
+            handleChange(value, setSelectedLop);
+          }}
           options={lopList.map((lop) => {
             return {
               value: lop.L_TEN,
@@ -52,7 +71,9 @@ export default function NhapSo() {
         <Select
           placeholder="Chọn Tuần"
           style={{ width: 120 }}
-          onChange={handleChange}
+          onChange={(value) => {
+            handleChange(value, setSelectedTuan);
+          }}
           options={tuanList.map((tuan) => {
             return {
               value: tuan.TUAN,
