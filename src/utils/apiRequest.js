@@ -77,3 +77,14 @@ export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
     console.log(error);
   }
 };
+
+export const addSoCoDo = async (info, setData, setLoading) => {
+  try {
+    await axios.post("http://localhost:8800/socodo/add", info);
+    if (setLoading) setLoading(false);
+    if (setData) setData(info);
+  } catch (error) {
+    console.log(error);
+    if (setLoading) setLoading(false);
+  }
+};

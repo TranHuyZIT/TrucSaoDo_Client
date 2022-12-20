@@ -1,17 +1,37 @@
-import { Button, Card, Col, Row, Select } from "antd";
+import { Button, Card, Col, Result, Row, Select } from "antd";
 import { useState, useEffect } from "react";
-import { getAllLop, getAllTuan } from "../../utils/apiRequest";
+import {
+  addSoCoDo,
+  findSoAndAllDetails,
+  getAllLop,
+  getAllTuan,
+} from "../../utils/apiRequest";
 import { lop, tuan } from "../TraCuuSo/interface";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { DatePicker } from "antd";
 import type { Dayjs } from "dayjs";
-
+import { soInnfo } from "./interface";
+interface NhapSoInfoProp {
+  setSoInfo: React.Dispatch<React.SetStateAction<soInnfo>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 const { RangePicker } = DatePicker;
 
 type RangeValue = [Dayjs | null, Dayjs | null] | null;
-export default function NhapSoInfo() {
+const NhapSoInfo: React.FC<NhapSoInfoProp> = (props) => {
+  const { setSoInfo, setOpen } = props;
   const [lopList, setLopList] = useState<lop[]>([]);
   const [tuanList, setTuanList] = useState<tuan[]>([]);
+  const [searchInfo, setSearchInfo] = useState<soInnfo>({
+    msg: "",
+    info: {
+      L_ten: "",
+      tuan: 0,
+      ngayBD: "",
+      ngayKT: "",
+      result: [],
+    },
+  });
 
   useEffect(() => {
     getAllLop(setLopList);
@@ -66,23 +86,22 @@ export default function NhapSoInfo() {
   };
 
   useEffect(() => {
-    const info: {
-      L_TEN: string;
-      TUAN: number;
-      NGAY_BD: string;
-      NGAY_KT: string;
-    } = {
-      L_TEN: selectedLop,
-      TUAN: +selectedTuan,
-      NGAY_BD: dateString.NGAY_BD,
-      NGAY_KT: dateString.NGAY_KT,
+    const soData: soInnfo = {
+      msg: "",
+      info: {
+        L_ten: selectedLop,
+        tuan: +selectedTuan,
+        ngayBD: dateString.NGAY_BD,
+        ngayKT: dateString.NGAY_KT,
+        result: [],
+      },
     };
     setValid(false);
     if (
-      info.L_TEN &&
-      info.TUAN &&
-      info.NGAY_BD &&
-      info.NGAY_KT &&
+      soData.info.L_ten &&
+      soData.info.tuan &&
+      soData.info.ngayBD &&
+      soData.info.ngayKT &&
       !isNotMonday() &&
       !isNotSunday()
     ) {
@@ -90,9 +109,36 @@ export default function NhapSoInfo() {
     }
   }, [selectedLop, selectedTuan, dateString]);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     setLoading(true);
+    await findSoAndAllDetails(selectedLop, selectedTuan, setSearchInfo);
   };
+  useEffect(() => {
+    if (searchInfo.msg === "") return;
+    console.log(searchInfo);
+    if (searchInfo.msg == "Not Found") {
+      addSoCoDo({
+        ngayBD: dateString.NGAY_BD,
+        ngayKT: dateString.NGAY_KT,
+        L_ten: selectedLop,
+        tuan: selectedTuan,
+      });
+      setSoInfo({
+        msg: "created",
+        info: {
+          L_ten: selectedLop,
+          tuan: +selectedTuan,
+          ngayBD: dateString.NGAY_BD,
+          ngayKT: dateString.NGAY_KT,
+          result: [],
+        },
+      });
+    } else if (searchInfo.msg == "Suceeded") {
+      setSoInfo({ ...searchInfo, msg: "found" });
+    }
+    setOpen(false);
+    setLoading(false);
+  }, [searchInfo]);
 
   return (
     <div className="content-container">
@@ -182,4 +228,5 @@ export default function NhapSoInfo() {
       </Row>
     </div>
   );
-}
+};
+export default NhapSoInfo;
