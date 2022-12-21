@@ -1,11 +1,22 @@
 import NhapSoInfo from "./NhapSoInfo";
 import "./NhapSo.css";
 import { useEffect, useState } from "react";
-import { soInnfo } from "./interface";
+import { lvp, soInnfo, vp } from "./interface";
 import { message } from "antd";
-import { addSoCoDo } from "../../utils/apiRequest";
+import {
+  addSoCoDo,
+  getAllLoaiViPham,
+  getAllViPham,
+} from "../../utils/apiRequest";
+import { lop, tuan } from "../TraCuuSo/interface";
 
+import { getAllLop, getAllTuan } from "../../utils/apiRequest";
+import NhapSoTable from "./NhapSoTable";
 export default function NhapSo() {
+  const [lopList, setLopList] = useState<lop[]>([]);
+  const [tuanList, setTuanList] = useState<tuan[]>([]);
+  const [viPhamList, setViPhamList] = useState<vp[]>([]);
+  const [loaiViPhamList, setLoaiViPhamList] = useState<lvp[]>([]);
   const [soInfo, setSoInfo] = useState<soInnfo>({
     msg: "",
     info: {
@@ -48,13 +59,30 @@ export default function NhapSo() {
     }
   }, [soInfo]);
 
+  useEffect(() => {
+    getAllLop(setLopList);
+    getAllTuan(setTuanList);
+    getAllViPham(setViPhamList);
+    getAllLoaiViPham(setLoaiViPhamList);
+  }, []);
+
   return (
     <div className="content-container">
       {contextHolder}
-      {openNhapSoInfo ? (
-        <NhapSoInfo setOpen={setOpenNhapSoInfo} setSoInfo={setSoInfo} />
+      {false ? (
+        <NhapSoInfo
+          tuanList={tuanList}
+          lopList={lopList}
+          setOpen={setOpenNhapSoInfo}
+          setSoInfo={setSoInfo}
+        />
       ) : (
-        <div></div>
+        <NhapSoTable
+          lvpList={loaiViPhamList}
+          lopList={lopList}
+          tuanList={tuanList}
+          vpList={viPhamList}
+        />
       )}
     </div>
   );

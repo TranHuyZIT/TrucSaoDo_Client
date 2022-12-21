@@ -19,3 +19,15 @@ export interface scdDataDay {
     SO_LUONG: number;
   }[];
 }
+
+export interface vp {
+  VP_MA: number;
+  LVP_MA: number;
+  TEN: string;
+  DIEM_TRU: number;
+}
+
+export interface lvp {
+  LVP_MA: number;
+  TEN: string;
+}

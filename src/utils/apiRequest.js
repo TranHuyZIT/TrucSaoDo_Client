@@ -1,8 +1,20 @@
 import axios from "axios";
 import { convertDateString } from "./commonUtils";
-export const getAllViPham = async (setData) => {
+export const getAllViPham = async (setData, lvp = "") => {
   try {
-    const result = await axios.get("http://localhost:8800/category/vipham");
+    const result = await axios.get(
+      `http://localhost:8800/category/vipham?lvp=${lvp}`
+    );
+    console.log(result.data);
+    setData(result.data);
+    return result.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getAllLoaiViPham = async (setData, lvp = null) => {
+  try {
+    const result = await axios.get(`http://localhost:8800/category/loaivipham`);
     setData(result.data);
     return result.data;
   } catch (error) {

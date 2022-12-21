@@ -38,6 +38,9 @@
   text-align: center;
   color: orange;
 }
+td {
+  text-align: center;
+}
 
 @keyframes fade {
   from {

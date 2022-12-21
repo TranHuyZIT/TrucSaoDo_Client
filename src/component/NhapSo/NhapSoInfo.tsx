@@ -1,11 +1,6 @@
 import { Button, Card, Col, Result, Row, Select } from "antd";
 import { useState, useEffect } from "react";
-import {
-  addSoCoDo,
-  findSoAndAllDetails,
-  getAllLop,
-  getAllTuan,
-} from "../../utils/apiRequest";
+import { addSoCoDo, findSoAndAllDetails } from "../../utils/apiRequest";
 import { lop, tuan } from "../TraCuuSo/interface";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { DatePicker } from "antd";
@@ -14,14 +9,15 @@ import { soInnfo } from "./interface";
 interface NhapSoInfoProp {
   setSoInfo: React.Dispatch<React.SetStateAction<soInnfo>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  tuanList: tuan[];
+  lopList: lop[];
 }
 const { RangePicker } = DatePicker;
 
 type RangeValue = [Dayjs | null, Dayjs | null] | null;
 const NhapSoInfo: React.FC<NhapSoInfoProp> = (props) => {
-  const { setSoInfo, setOpen } = props;
-  const [lopList, setLopList] = useState<lop[]>([]);
-  const [tuanList, setTuanList] = useState<tuan[]>([]);
+  const { setSoInfo, setOpen, tuanList, lopList } = props;
+
   const [searchInfo, setSearchInfo] = useState<soInnfo>({
     msg: "",
     info: {
@@ -32,11 +28,6 @@ const NhapSoInfo: React.FC<NhapSoInfoProp> = (props) => {
       result: [],
     },
   });
-
-  useEffect(() => {
-    getAllLop(setLopList);
-    getAllTuan(setTuanList);
-  }, []);
 
   const [selectedLop, setSelectedLop] = useState<string>("");
   const [selectedTuan, setSelectedTuan] = useState<string>("");
