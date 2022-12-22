@@ -3,6 +3,7 @@ import React from "react";
 import Authentication from "./component/Authentication/Authentication";
 import Navbar from "./component/Navbar/Navbar";
 import NhapSo from "./component/NhapSo/NhapSo";
+import ThongKe from "./component/ThongKe/ThongKe";
 import TraCuuSo from "./component/TraCuuSo/TraCuuSo";
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
       <Row>
         <Navbar />
       </Row>
-      <NhapSo />
+      <ThongKe />
     </div>
   );
 }
