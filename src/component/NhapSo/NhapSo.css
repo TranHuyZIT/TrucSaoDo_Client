@@ -38,7 +38,47 @@
   text-align: center;
   color: orange;
 }
-td {
+td,
+th {
+  text-align: center !important;
+}
+
+.socodo-title-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 8px;
+  margin: 16px 0;
+}
+.socodo-time-container {
+  display: flex;
+  justify-content: center;
+}
+.socodo-heading-container h1 {
+  text-align: center;
+}
+.socodo-time-container h2 {
+  margin-right: 16px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.table-control-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.table-control-container .button {
+  margin-right: 8px;
+}
+
+.row-edit-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.row-edit-container a {
   text-align: center;
 }
 

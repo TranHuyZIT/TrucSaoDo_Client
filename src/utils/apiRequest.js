@@ -5,7 +5,6 @@ export const getAllViPham = async (setData, lvp = "") => {
     const result = await axios.get(
       `http://localhost:8800/category/vipham?lvp=${lvp}`
     );
-    console.log(result.data);
     setData(result.data);
     return result.data;
   } catch (error) {
@@ -39,13 +38,25 @@ export const getAllTuan = async (setData) => {
     console.log(error);
   }
 };
+
+export const findSo = async (l_ten, tuan) => {
+  try {
+    const soResult = await axios.get(
+      `http://localhost:8800/socodo/search?l_ten=${l_ten}&tuan=${tuan}`
+    );
+    return soResult.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const findSoAndAllDetails = async (l_ten, tuan, setData, setLoading) => {
   try {
     if (setLoading) setLoading(true);
     const soResult = await axios.get(
       `http://localhost:8800/socodo/search?l_ten=${l_ten}&tuan=${tuan}`
     );
-    if (soResult.data.length == 0) {
+    if (soResult.data.length === 0) {
       if (setLoading) setLoading(false);
       if (setData) setData({ msg: "Not Found", info: null });
       return false;
@@ -98,5 +109,74 @@ export const addSoCoDo = async (info, setData, setLoading) => {
   } catch (error) {
     console.log(error);
     if (setLoading) setLoading(false);
+  }
+};
+
+export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
+  try {
+    const SCD = await findSo(l_ten, tuan);
+    const maSo = SCD[0].MA_SO;
+    console.log(maSo);
+    console.log(thu);
+    // Error right here
+    let ngayDate = new Date(ngayBDSo);
+    ngayDate.setDate(ngayDate.getDate() + thu - 2);
+    let ngay = convertDateString(ngayDate);
+    console.log(ngay);
+    const ctSCDRes = await axios.get(
+      `http://localhost:8800/socodo/chitietscd?ma_so=${maSo}&ngay=${ngay}`
+    );
+    if (ctSCDRes.data.length === 0) {
+      await axios.post("http://localhost:8800/socodo/chitietscd/add", {
+        ngay: ngay,
+        ma_so: +maSo,
+        thu: +thu,
+        tenHS: tenHS,
+      });
+    }
+    console.log(ctSCDRes);
+    const ctVPRes = await axios.get(
+      `http://localhost:8800/chitietvipham?ngay=${ngay}&ma_so=${maSo}`
+    );
+    const existedVPMa = ctVPRes.data.map((ctvp) => ctvp.VP_MA);
+    console.log(existedVPMa);
+    for (let vp of vipham) {
+      if (existedVPMa.includes(+vp.VP_MA)) {
+        if (vp.SO_LUONG == 0) {
+          console.log(ngay, maSo, vp.VP_MA);
+          await axios.delete("http://localhost:8800/chitietvipham/delete", {
+            data: {
+              ngay: ngay,
+              ma_so: +maSo,
+              vpMa: +vp.VP_MA,
+            },
+          });
+          continue;
+        }
+        await axios.put("http://localhost:8800/chitietvipham/update", {
+          ngay: ngay,
+          ma_so: +maSo,
+          vpMa: +vp.VP_MA,
+          newChiTietViPham: {
+            ngay: ngay,
+            ma_so: +maSo,
+            vpMa: +vp.VP_MA,
+            soLuong: vp.SO_LUONG,
+          },
+        });
+      } else {
+        if (vp.SO_LUONG != 0) {
+          console.log(vp);
+          await axios.post("http://localhost:8800/chitietvipham/add", {
+            ngay: ngay,
+            ma_so: +maSo,
+            vpMa: +vp.VP_MA,
+            soLuong: vp.SO_LUONG,
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
   }
 };

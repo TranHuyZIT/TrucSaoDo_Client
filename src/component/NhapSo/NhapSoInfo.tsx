@@ -5,6 +5,7 @@ import { lop, tuan } from "../TraCuuSo/interface";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { DatePicker } from "antd";
 import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { soInnfo } from "./interface";
 interface NhapSoInfoProp {
   setSoInfo: React.Dispatch<React.SetStateAction<soInnfo>>;
@@ -15,6 +16,8 @@ interface NhapSoInfoProp {
 const { RangePicker } = DatePicker;
 
 type RangeValue = [Dayjs | null, Dayjs | null] | null;
+const dateFormat = "YYYY-MM-DD";
+
 const NhapSoInfo: React.FC<NhapSoInfoProp> = (props) => {
   const { setSoInfo, setOpen, tuanList, lopList } = props;
 
@@ -125,7 +128,14 @@ const NhapSoInfo: React.FC<NhapSoInfoProp> = (props) => {
         },
       });
     } else if (searchInfo.msg == "Suceeded") {
-      setSoInfo({ ...searchInfo, msg: "found" });
+      setSoInfo({
+        msg: "found",
+        info: {
+          ...searchInfo.info,
+          L_ten: selectedLop,
+          tuan: +selectedTuan,
+        },
+      });
     }
     setOpen(false);
     setLoading(false);
@@ -175,8 +185,8 @@ const NhapSoInfo: React.FC<NhapSoInfoProp> = (props) => {
             <Row className="card-row" justify="center" dir="column">
               <Col span={25}>
                 <RangePicker
-                  status={isNotMonday() || isNotSunday() ? "warning" : ""}
                   placeholder={["Ngày Bắt Đầu", "Ngày Kết Thúc"]}
+                  status={isNotMonday() || isNotSunday() ? "warning" : ""}
                   value={dates || value}
                   disabledDate={disabledDate}
                   onCalendarChange={(val) => setDates(val)}

@@ -51,7 +51,6 @@ export default function NhapSo() {
   };
 
   useEffect(() => {
-    console.log(soInfo);
     if (soInfo.msg === "created") {
       success("Tạo sổ mới thành công!");
     } else if (soInfo.msg === "found") {
@@ -69,7 +68,7 @@ export default function NhapSo() {
   return (
     <div className="content-container">
       {contextHolder}
-      {false ? (
+      {openNhapSoInfo ? (
         <NhapSoInfo
           tuanList={tuanList}
           lopList={lopList}
@@ -78,10 +77,12 @@ export default function NhapSo() {
         />
       ) : (
         <NhapSoTable
+          data={soInfo}
           lvpList={loaiViPhamList}
           lopList={lopList}
           tuanList={tuanList}
           vpList={viPhamList}
+          setOpenNhapSoInfo={setOpenNhapSoInfo}
         />
       )}
     </div>
