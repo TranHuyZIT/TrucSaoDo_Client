@@ -1,0 +1,36 @@
+.thongke-card {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  width: 900px;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 100px;
+  padding: 32px;
+  border-radius: 16px;
+}
+.stat-heading-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-title-container h1 {
+  text-align: center;
+}
+.stat-heading-select {
+  margin-top: 8px;
+  width: 200px;
+  max-width: 100%;
+}
+.stat-container {
+  margin-top: 16px;
+}
+
+.stat-container section {
+  margin-top: 12px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 8px;
+  padding: 12px;
+}
