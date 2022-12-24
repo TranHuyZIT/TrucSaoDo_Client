@@ -4,6 +4,7 @@ import { SearchOutlined, FileAddOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
 import SoCoDo from "./SoCoDo";
+import ListSoCoDo from "./ListSoCoDo";
 import {
   findSoAndAllDetails,
   getAllLop,
@@ -46,8 +47,11 @@ export default function TraCuuSo() {
     setSelected(value);
   };
 
-  const handleSearch = () => {
-    findSoAndAllDetails(selectedLop, selectedTuan, setSCDData);
+  useEffect(() => {
+    console.log(selectedLop, selectedTuan);
+  }, [selectedLop, selectedTuan]);
+  const handleSearch = async () => {
+    await findSoAndAllDetails(selectedLop, selectedTuan, setSCDData);
     setTitleInfo({
       tenLop: selectedLop,
       tuan: +selectedTuan,
@@ -74,12 +78,19 @@ export default function TraCuuSo() {
           onChange={(value) => {
             handleChange(value, setSelectedLop);
           }}
-          options={lopList.map((lop) => {
-            return {
-              value: lop.L_TEN,
-              label: `Lớp ${lop.L_TEN}`,
-            };
-          })}
+          value={selectedLop || undefined}
+          options={[
+            {
+              value: "Tất Cả",
+              label: "Tất Cả",
+            },
+            ...lopList.map((lop) => {
+              return {
+                value: lop.L_TEN,
+                label: `Lớp ${lop.L_TEN}`,
+              };
+            }),
+          ]}
         />
         <Select
           placeholder="Chọn Tuần"
@@ -87,12 +98,19 @@ export default function TraCuuSo() {
           onChange={(value) => {
             handleChange(value, setSelectedTuan);
           }}
-          options={tuanList.map((tuan) => {
-            return {
-              value: tuan.TUAN,
-              label: `Tuần ${tuan.TUAN}`,
-            };
-          })}
+          value={selectedTuan || undefined}
+          options={[
+            {
+              value: "Tất Cả",
+              label: "Tất Cả",
+            },
+            ...tuanList.map((tuan) => {
+              return {
+                value: tuan.TUAN,
+                label: `Tuần ${tuan.TUAN}`,
+              };
+            }),
+          ]}
         />
         <Button
           style={{ backgroundColor: "var(--primaryblue)" }}
@@ -103,22 +121,34 @@ export default function TraCuuSo() {
           Tìm kiếm
         </Button>
       </div>
-      <div className="so-container">
-        {scdData.msg === "Suceeded" ? (
-          <SoCoDo titleInfo={titleInfo} info={scdData?.info} />
-        ) : (
-          scdData.msg !== "unset" && (
-            <div>
-              <div className="empty-result-text">Không Có Dữ Liệu</div>
-              <div className="add-scd-container">
-                <Button type="primary" icon={<FileAddOutlined />}>
-                  Tạo
-                </Button>
+      {selectedLop === "Tất Cả" ||
+      selectedLop === "" ||
+      selectedTuan === "Tất Cả" ||
+      selectedTuan === "" ? (
+        <ListSoCoDo
+          setSelectedLop={setSelectedLop}
+          setSelectedTuan={setSelectedTuan}
+          setSCDData={setSCDData}
+          setTitleInfo={setTitleInfo}
+        />
+      ) : (
+        <div className="so-container">
+          {scdData.msg === "Suceeded" ? (
+            <SoCoDo titleInfo={titleInfo} info={scdData?.info} />
+          ) : (
+            scdData.msg !== "unset" && (
+              <div>
+                <div className="empty-result-text">Không Có Dữ Liệu</div>
+                <div className="add-scd-container">
+                  <Button type="primary" icon={<FileAddOutlined />}>
+                    Tạo
+                  </Button>
+                </div>
               </div>
-            </div>
-          )
-        )}
-      </div>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

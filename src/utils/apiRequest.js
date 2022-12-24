@@ -39,11 +39,12 @@ export const getAllTuan = async (setData) => {
   }
 };
 
-export const findSo = async (l_ten, tuan) => {
+export const findSo = async (l_ten, tuan, setData) => {
   try {
     const soResult = await axios.get(
       `http://localhost:8800/socodo/search?l_ten=${l_ten}&tuan=${tuan}`
     );
+    setData(soResult.data);
     return soResult.data;
   } catch (error) {
     console.log(error);
@@ -116,13 +117,10 @@ export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
   try {
     const SCD = await findSo(l_ten, tuan);
     const maSo = SCD[0].MA_SO;
-    console.log(maSo);
-    console.log(thu);
     // Error right here
     let ngayDate = new Date(ngayBDSo);
     ngayDate.setDate(ngayDate.getDate() + thu - 2);
     let ngay = convertDateString(ngayDate);
-    console.log(ngay);
     const ctSCDRes = await axios.get(
       `http://localhost:8800/socodo/chitietscd?ma_so=${maSo}&ngay=${ngay}`
     );
@@ -134,12 +132,10 @@ export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
         tenHS: tenHS,
       });
     }
-    console.log(ctSCDRes);
     const ctVPRes = await axios.get(
       `http://localhost:8800/chitietvipham?ngay=${ngay}&ma_so=${maSo}`
     );
     const existedVPMa = ctVPRes.data.map((ctvp) => ctvp.VP_MA);
-    console.log(existedVPMa);
     for (let vp of vipham) {
       if (existedVPMa.includes(+vp.VP_MA)) {
         if (vp.SO_LUONG == 0) {
@@ -166,7 +162,6 @@ export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
         });
       } else {
         if (vp.SO_LUONG != 0) {
-          console.log(vp);
           await axios.post("http://localhost:8800/chitietvipham/add", {
             ngay: ngay,
             ma_so: +maSo,
@@ -176,6 +171,17 @@ export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
         }
       }
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDiemTheoTuan = async (tuan, setData) => {
+  try {
+    const res = await axios.get(
+      `http://localhost:8800/thongke/diemtru?tuan=${tuan}`
+    );
+    setData(res.data);
   } catch (error) {
     console.log(error);
   }

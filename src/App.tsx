@@ -1,19 +1,27 @@
 import { Row } from "antd";
-import React from "react";
-import Authentication from "./component/Authentication/Authentication";
 import Navbar from "./component/Navbar/Navbar";
-import NhapSo from "./component/NhapSo/NhapSo";
-import ThongKe from "./component/ThongKe/ThongKe";
-import TraCuuSo from "./component/TraCuuSo/TraCuuSo";
-
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import routers from "./router";
 function App() {
   return (
-    <div className="App">
-      <Row>
-        <Navbar />
-      </Row>
-      <ThongKe />
-    </div>
+    <Router>
+      <div className="App">
+        <Row>
+          <Navbar />
+        </Row>
+      </div>
+      <Routes>
+        {routers.map((router: { path: string; component: any }) => {
+          return (
+            <Route
+              key={router.path}
+              path={router.path}
+              element={<router.component />}
+            />
+          );
+        })}
+      </Routes>
+    </Router>
   );
 }
 

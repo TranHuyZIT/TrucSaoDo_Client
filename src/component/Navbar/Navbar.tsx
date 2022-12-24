@@ -1,5 +1,7 @@
 import { UserOutlined } from "@ant-design/icons";
 import "./Navbar.css";
+import { NavLink } from "react-router-dom";
+import routers from "../../router";
 
 export default function Navbar() {
   return (
@@ -11,9 +13,22 @@ export default function Navbar() {
         />
       </div>
       <div className="nav-menu-container">
-        <div className="nav-link-container active">
-          <a>Tra Cứu Sổ</a>
-        </div>
+        {routers.map((router) => {
+          if (router.path === "/login") {
+          } else {
+            return (
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? "nav-link-container active" : "nav-link-container"
+                }
+                to={router.path}
+              >
+                <a>{router.name}</a>
+              </NavLink>
+            );
+          }
+        })}
+        {/* 
         <div className="nav-link-container">
           <a>Nhập Sổ</a>
         </div>
@@ -22,7 +37,7 @@ export default function Navbar() {
         </div>
         <div className="nav-link-container">
           <a>Cập Nhật Danh Mục</a>
-        </div>
+        </div> */}
       </div>
     </div>
   );
