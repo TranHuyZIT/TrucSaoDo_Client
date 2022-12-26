@@ -44,7 +44,7 @@ export const findSo = async (l_ten, tuan, setData) => {
     const soResult = await axios.get(
       `http://localhost:8800/socodo/search?l_ten=${l_ten}&tuan=${tuan}`
     );
-    setData(soResult.data);
+    if (setData) setData(soResult.data);
     return soResult.data;
   } catch (error) {
     console.log(error);
@@ -117,7 +117,6 @@ export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
   try {
     const SCD = await findSo(l_ten, tuan);
     const maSo = SCD[0].MA_SO;
-    // Error right here
     let ngayDate = new Date(ngayBDSo);
     ngayDate.setDate(ngayDate.getDate() + thu - 2);
     let ngay = convertDateString(ngayDate);
@@ -139,7 +138,6 @@ export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
     for (let vp of vipham) {
       if (existedVPMa.includes(+vp.VP_MA)) {
         if (vp.SO_LUONG == 0) {
-          console.log(ngay, maSo, vp.VP_MA);
           await axios.delete("http://localhost:8800/chitietvipham/delete", {
             data: {
               ngay: ngay,

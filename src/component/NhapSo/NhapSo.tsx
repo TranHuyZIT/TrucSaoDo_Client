@@ -66,7 +66,7 @@ export default function NhapSo() {
   }, []);
 
   return (
-    <div className="content-container">
+    <div>
       {contextHolder}
       {openNhapSoInfo ? (
         <NhapSoInfo

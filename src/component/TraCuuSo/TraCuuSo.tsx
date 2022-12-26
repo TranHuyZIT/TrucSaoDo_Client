@@ -10,13 +10,15 @@ import {
   getAllLop,
   getAllTuan,
 } from "../../utils/apiRequest";
-
+import { useSearchParams } from "react-router-dom";
+import { Empty } from "antd";
 export default function TraCuuSo() {
   const [lopList, setLopList] = useState<lop[]>([]);
   const [tuanList, setTuanList] = useState<tuan[]>([]);
 
   const [selectedLop, setSelectedLop] = useState<string>("");
   const [selectedTuan, setSelectedTuan] = useState<string>("");
+  const [searchParams] = useSearchParams();
 
   const [scdData, setSCDData] = useState<scdData>({
     msg: "unset",
@@ -27,6 +29,24 @@ export default function TraCuuSo() {
     tuan: 0,
   });
   const [messageApi, contextHolder] = message.useMessage();
+  const lopParam = searchParams.get("lop");
+  const tuanParam = searchParams.get("tuan");
+
+  useEffect(() => {
+    const find = async (lop: string, tuan: string) => {
+      await findSoAndAllDetails(lop, +tuan, setSCDData);
+      setTitleInfo({
+        tenLop: selectedLop,
+        tuan: +selectedTuan,
+      });
+    };
+    console.log(lopParam, tuanParam);
+    if (lopParam) setSelectedLop(lopParam);
+    if (tuanParam) setSelectedTuan(tuanParam);
+    if (lopParam && tuanParam) {
+      find(lopParam, tuanParam);
+    }
+  }, [lopParam, tuanParam]);
 
   const success = () => {
     messageApi.open({
@@ -47,16 +67,18 @@ export default function TraCuuSo() {
     setSelected(value);
   };
 
-  useEffect(() => {
-    console.log(selectedLop, selectedTuan);
-  }, [selectedLop, selectedTuan]);
   const handleSearch = async () => {
+    if (selectedLop === "Tất Cả" || selectedTuan === "Tất Cả") return;
     await findSoAndAllDetails(selectedLop, selectedTuan, setSCDData);
     setTitleInfo({
       tenLop: selectedLop,
       tuan: +selectedTuan,
     });
   };
+
+  useEffect(() => {
+    console.log(scdData);
+  }, [scdData]);
 
   useEffect(() => {
     getAllLop(setLopList);
@@ -121,24 +143,25 @@ export default function TraCuuSo() {
           Tìm kiếm
         </Button>
       </div>
-      {selectedLop === "Tất Cả" ||
-      selectedLop === "" ||
-      selectedTuan === "Tất Cả" ||
-      selectedTuan === "" ? (
+      {scdData.msg === "unset" ||
+      selectedLop === "Tất Cả" ||
+      selectedTuan === "Tất Cả" ? (
         <ListSoCoDo
           setSelectedLop={setSelectedLop}
           setSelectedTuan={setSelectedTuan}
           setSCDData={setSCDData}
           setTitleInfo={setTitleInfo}
+          selectedLop={selectedLop}
+          selectedTuan={selectedTuan}
         />
       ) : (
-        <div className="so-container">
+        <div className="so-container fadeIn">
           {scdData.msg === "Suceeded" ? (
             <SoCoDo titleInfo={titleInfo} info={scdData?.info} />
           ) : (
             scdData.msg !== "unset" && (
               <div>
-                <div className="empty-result-text">Không Có Dữ Liệu</div>
+                <Empty />
                 <div className="add-scd-container">
                   <Button type="primary" icon={<FileAddOutlined />}>
                     Tạo

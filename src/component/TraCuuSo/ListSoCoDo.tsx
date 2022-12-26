@@ -4,11 +4,15 @@ import { findSo, findSoAndAllDetails } from "../../utils/apiRequest";
 import { convertDateString } from "../../utils/commonUtils";
 import { scdData, TitleInfo } from "./interface";
 import "./TraCuuSo.css";
+import { Spin } from "antd";
+import RowCarousel from "./RowCarousel";
 interface ListSoCoDoProps {
   setSelectedTuan: React.Dispatch<React.SetStateAction<string>>;
   setSelectedLop: React.Dispatch<React.SetStateAction<string>>;
   setTitleInfo: React.Dispatch<React.SetStateAction<TitleInfo>>;
   setSCDData: React.Dispatch<React.SetStateAction<scdData>>;
+  selectedTuan: string;
+  selectedLop: string;
 }
 interface SoCoDo {
   MA_SO: number;
@@ -17,13 +21,30 @@ interface SoCoDo {
   L_TEN: string;
   TUAN: number;
 }
-const { Meta } = Card;
+
 const ListSoCoDo: React.FC<ListSoCoDoProps> = (props) => {
-  const { setSelectedLop, setSelectedTuan, setTitleInfo, setSCDData } = props;
+  const {
+    setSelectedLop,
+    setSelectedTuan,
+    setTitleInfo,
+    setSCDData,
+    selectedLop,
+    selectedTuan,
+  } = props;
   const [allSCD, setAllSCD] = useState<SoCoDo[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
-    findSo("", "", setAllSCD);
-  }, []);
+    const find = async () => {
+      await findSo(
+        selectedLop === "Tất Cả" ? "" : selectedLop,
+        selectedTuan === "Tất Cả" ? "" : selectedTuan,
+        setAllSCD
+      );
+    };
+    setLoading(true);
+    find();
+    setLoading(false);
+  }, [selectedLop, selectedTuan]);
 
   const handleCardClick = (scd: SoCoDo) => {
     setSelectedLop(scd.L_TEN);
@@ -36,34 +57,25 @@ const ListSoCoDo: React.FC<ListSoCoDoProps> = (props) => {
   };
 
   return (
-    <Row gutter={16}>
-      {allSCD?.map((scd) => {
-        return (
-          <Col span={5}>
-            <Card
-              onClick={() => {
-                handleCardClick(scd);
-              }}
-              hoverable
-              className="list-card"
-              cover={
-                <img
-                  alt="sổ sao đỏ"
-                  src="https://dtntbaolam.edu.vn/uploads/news/2018_09/logo-hddtw-chuan-2.jpg"
-                />
-              }
-            >
-              <Meta
-                title={`Sổ Lớp ${scd.L_TEN} - Tuần ${scd.TUAN} - Mã Sổ ${scd.MA_SO}`}
-                description={`${convertDateString(
-                  scd.NGAY_BD
-                )} đến ${convertDateString(scd.NGAY_KT)}`}
-              />
-            </Card>
-          </Col>
-        );
-      })}
-    </Row>
+    <>
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      ) : (
+        <div className="listsocodo-container fadeIn">
+          <Row align="middle" justify="center" gutter={16}>
+            <RowCarousel allSCD={allSCD} handleCardClick={handleCardClick} />
+          </Row>
+        </div>
+      )}
+    </>
   );
 };
 export default ListSoCoDo;

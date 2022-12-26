@@ -128,8 +128,13 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
   const isEditing = (record: Item) => record.key === editingKey;
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
-    form.setFieldsValue({ ...record });
+    console.log(record);
+    form.setFieldValue("data", {
+      ...record.data,
+    });
+    console.log(form.getFieldValue("data"));
     setEditingKey(record.key);
+    console.log(record.key);
   };
 
   const cancel = () => {
@@ -144,6 +149,10 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const item = newData[index];
+        console.log({
+          ...item,
+          ...row,
+        });
         newData.splice(index, 1, {
           ...item,
           ...row,
@@ -201,7 +210,7 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
   }, [data]);
 
   return (
-    <Form form={form} component={false}>
+    <>
       <div className="nhaptable-heading-container">
         <div className="socodo-title-container">
           <div className="socodo-heading-container">
@@ -231,100 +240,102 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
           </div>
         </div>
       </div>
-      <Table
-        pagination={false}
-        dataSource={scdData}
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-      >
-        <Column width="5%" dataIndex="day" title="THỨ" />
-        {lvpList.map((loaiVP) => {
-          return (
-            <ColumnGroup key={loaiVP.LVP_MA} title={loaiVP.TEN.toUpperCase()}>
-              {vpList
-                .filter((vp) => vp.LVP_MA === loaiVP.LVP_MA)
-                .map((vp) => {
-                  return (
-                    <Column
-                      key={vp.VP_MA}
-                      width="8%"
-                      dataIndex={["data", `${vp.LVP_MA}_${vp.VP_MA}`]}
-                      title={vp.TEN}
-                      onCell={(record: Item) => ({
-                        record,
-                        inputType: "number",
-                        dataIndex: ["data", `${vp.LVP_MA}_${vp.VP_MA}`],
-                        title: vp.TEN,
-                        editing: isEditing(record),
-                      })}
-                    />
-                  );
-                })}
-            </ColumnGroup>
-          );
-        })}
-        <Column
-          title="TÊN HỌC SINH TRỰC"
-          dataIndex="tenHS"
-          onCell={(record: Item) => ({
-            record,
-            inputType: "text",
-            dataIndex: "tenHS",
-            title: "TÊN HỌC SINH TRỰC",
-            editing: isEditing(record),
-          })}
-        />
-        <Column title="TỔNG CỘNG" />
-        <Column
-          title="Chỉnh sửa"
-          render={(_: any, record: Item) => {
-            const editable = isEditing(record);
-            return editable ? (
-              <span className="row-edit-container">
-                <Typography.Link onClick={() => save(record.key)}>
-                  Lưu Dòng
-                </Typography.Link>
-                <Popconfirm
-                  title="Bạn có chắc chắn muốn hủy thay đổi không?"
-                  onConfirm={cancel}
-                >
-                  <a>Hủy Bỏ</a>
-                </Popconfirm>
-              </span>
-            ) : (
-              <Typography.Link
-                disabled={editingKey !== ""}
-                onClick={() => edit(record)}
-              >
-                Chỉnh Sửa
-              </Typography.Link>
-            );
-          }}
-        />
-      </Table>
-      <div className="table-control-container">
-        <Button
-          size="large"
-          ghost
-          className="button"
-          type="primary"
-          onClick={() => {
-            setOpenNhapSoInfo(true);
+      <Form form={form} component={false}>
+        <Table
+          pagination={false}
+          dataSource={scdData}
+          components={{
+            body: {
+              cell: EditableCell,
+            },
           }}
         >
-          Quay Lại
-        </Button>
-        <Button size="large" className="button" danger type="primary">
-          Xóa
-        </Button>
-        <Button size="large" className="button" type="primary">
-          Lưu
-        </Button>
-      </div>
-    </Form>
+          <Column width="5%" dataIndex="day" title="THỨ" />
+          {lvpList.map((loaiVP) => {
+            return (
+              <ColumnGroup key={loaiVP.LVP_MA} title={loaiVP.TEN.toUpperCase()}>
+                {vpList
+                  .filter((vp) => vp.LVP_MA === loaiVP.LVP_MA)
+                  .map((vp) => {
+                    return (
+                      <Column
+                        key={vp.VP_MA}
+                        width="8%"
+                        dataIndex={["data", `${vp.LVP_MA}_${vp.VP_MA}`]}
+                        title={vp.TEN}
+                        onCell={(record: Item) => ({
+                          record,
+                          inputType: "number",
+                          dataIndex: ["data", `${vp.LVP_MA}_${vp.VP_MA}`],
+                          title: vp.TEN,
+                          editing: isEditing(record),
+                        })}
+                      />
+                    );
+                  })}
+              </ColumnGroup>
+            );
+          })}
+          <Column
+            title="TÊN HỌC SINH TRỰC"
+            dataIndex="tenHS"
+            onCell={(record: Item) => ({
+              record,
+              inputType: "text",
+              dataIndex: "tenHS",
+              title: "TÊN HỌC SINH TRỰC",
+              editing: isEditing(record),
+            })}
+          />
+          <Column title="TỔNG CỘNG" />
+          <Column
+            title="Chỉnh sửa"
+            render={(_: any, record: Item) => {
+              const editable = isEditing(record);
+              return editable ? (
+                <span className="row-edit-container">
+                  <Typography.Link onClick={() => save(record.key)}>
+                    Lưu Dòng
+                  </Typography.Link>
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn hủy thay đổi không?"
+                    onConfirm={cancel}
+                  >
+                    <a>Hủy Bỏ</a>
+                  </Popconfirm>
+                </span>
+              ) : (
+                <Typography.Link
+                  disabled={editingKey !== ""}
+                  onClick={() => edit(record)}
+                >
+                  Chỉnh Sửa
+                </Typography.Link>
+              );
+            }}
+          />
+        </Table>
+        <div className="table-control-container">
+          <Button
+            size="large"
+            ghost
+            className="button"
+            type="primary"
+            onClick={() => {
+              setOpenNhapSoInfo(true);
+            }}
+          >
+            Quay Lại
+          </Button>
+          <Button size="large" className="button" danger type="primary">
+            Xóa
+          </Button>
+          <Button size="large" className="button" type="primary">
+            Lưu
+          </Button>
+        </div>
+      </Form>
+    </>
   );
 };
 

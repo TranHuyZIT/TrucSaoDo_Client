@@ -5,9 +5,12 @@
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 100px;
   padding: 32px;
   border-radius: 16px;
+  background-color: white;
+  position: relative;
+  transform: translateY(30%);
+  animation: fade 0.5s ease-in-out;
 }
 .stat-heading-container {
   display: flex;
@@ -18,6 +21,7 @@
 
 .stat-title-container h1 {
   text-align: center;
+  color: var(--darkblue);
 }
 .stat-heading-select {
   margin-top: 8px;
@@ -33,4 +37,19 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   border-radius: 8px;
   padding: 12px;
+}
+
+.thongke-container {
+  background-color: var(--greydarkblue);
+}
+
+@keyframes fade {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(30%);
+    opacity: 1;
+  }
 }

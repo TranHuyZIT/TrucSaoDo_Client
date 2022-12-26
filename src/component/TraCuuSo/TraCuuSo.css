@@ -39,8 +39,18 @@
   text-align: center;
   font-weight: 500;
 }
+.listsocodo-container {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 32px 0;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 75vh;
+  height: fit-content;
+  border-radius: 24px;
+}
 .list-card {
   width: 100%;
+  background-color: white;
 }
 .list-card img {
   max-width: 100%;
@@ -48,4 +58,67 @@
   margin: auto;
   object-fit: cover;
   height: 120px;
+}
+.arrow-btn {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 50%;
+  padding: 16px;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+.arrow-btn:hover {
+  box-shadow: var(--primaryblue) 0px 8px 24px;
+  transform: scale(1.05);
+}
+/* Animations */
+.fadeIn {
+  animation-name: fadeIn;
+  -webkit-animation-name: fadeIn;
+
+  animation-duration: 0.8s;
+  -webkit-animation-duration: 0.8s;
+
+  animation-timing-function: ease-in-out;
+  -webkit-animation-timing-function: ease-in-out;
+
+  visibility: visible !important;
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  80% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    -webkit-transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    -webkit-transform: scale(1.1);
+  }
+  80% {
+    -webkit-transform: scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 1;
+  }
 }

@@ -142,91 +142,93 @@ const NhapSoInfo: React.FC<NhapSoInfoProp> = (props) => {
   }, [searchInfo]);
 
   return (
-    <div className="content-container">
-      <Row justify="center">
-        <Col span={10}>
-          <Card
-            className="card"
-            title={<div className="info-card-heading">Nhập Thông Tin Sổ</div>}
-            bordered={false}
-          >
-            <Row className="card-row">
-              <Col className="select-container" span={12}>
-                <Select
-                  placeholder="Chọn Lớp"
-                  style={{ width: 120 }}
-                  onChange={(value) => {
-                    handleChange(value, setSelectedLop);
-                  }}
-                  options={lopList.map((lop) => {
-                    return {
-                      value: lop.L_TEN,
-                      label: `Lớp ${lop.L_TEN}`,
-                    };
-                  })}
-                />
-              </Col>
-              <Col className="select-container" span={12}>
-                <Select
-                  placeholder="Chọn Tuần"
-                  style={{ width: 120 }}
-                  onChange={(value) => {
-                    handleChange(value, setSelectedTuan);
-                  }}
-                  options={tuanList.map((tuan) => {
-                    return {
-                      value: tuan.TUAN,
-                      label: `Tuần ${tuan.TUAN}`,
-                    };
-                  })}
-                />
-              </Col>
-            </Row>
-            <Row className="card-row" justify="center" dir="column">
-              <Col span={25}>
-                <RangePicker
-                  placeholder={["Ngày Bắt Đầu", "Ngày Kết Thúc"]}
-                  status={isNotMonday() || isNotSunday() ? "warning" : ""}
-                  value={dates || value}
-                  disabledDate={disabledDate}
-                  onCalendarChange={(val) => setDates(val)}
-                  onChange={(val, string) => {
-                    setDateString({
-                      NGAY_BD: string[0],
-                      NGAY_KT: string[1],
-                    });
-                    setValue(val);
-                  }}
-                  onOpenChange={onOpenChange}
-                />
-              </Col>
-              <Col span={24}>
-                {isNotMonday() && (
-                  <div className="date-msg">
-                    Cảnh Báo: Ngày Bắt Đầu Không Là Thứ 2
-                  </div>
-                )}
-                {isNotSunday() && (
-                  <div className="date-msg">
-                    Cảnh Báo: Ngày Kết Thúc Không Là Chủ Nhật
-                  </div>
-                )}
-              </Col>
-            </Row>
-            <Row justify="end">
-              <Button
-                onClick={handleAdd}
-                size="large"
-                icon={loading ? <LoadingOutlined /> : <PlusOutlined />}
-                type="primary"
-                disabled={!valid}
-              >
-                Tạo
-              </Button>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+    <div className="nhapsoinfo-container">
+      <div className="nhapsoinfo-content">
+        <Row justify="center">
+          <Col span={10}>
+            <Card
+              className="card"
+              title={<div className="info-card-heading">Nhập Thông Tin Sổ</div>}
+              bordered={false}
+            >
+              <Row className="card-row">
+                <Col className="select-container" span={12}>
+                  <Select
+                    placeholder="Chọn Lớp"
+                    style={{ width: 120 }}
+                    onChange={(value) => {
+                      handleChange(value, setSelectedLop);
+                    }}
+                    options={lopList.map((lop) => {
+                      return {
+                        value: lop.L_TEN,
+                        label: `Lớp ${lop.L_TEN}`,
+                      };
+                    })}
+                  />
+                </Col>
+                <Col className="select-container" span={12}>
+                  <Select
+                    placeholder="Chọn Tuần"
+                    style={{ width: 120 }}
+                    onChange={(value) => {
+                      handleChange(value, setSelectedTuan);
+                    }}
+                    options={tuanList.map((tuan) => {
+                      return {
+                        value: tuan.TUAN,
+                        label: `Tuần ${tuan.TUAN}`,
+                      };
+                    })}
+                  />
+                </Col>
+              </Row>
+              <Row className="card-row" justify="center" dir="column">
+                <Col span={25}>
+                  <RangePicker
+                    placeholder={["Ngày Bắt Đầu", "Ngày Kết Thúc"]}
+                    status={isNotMonday() || isNotSunday() ? "warning" : ""}
+                    value={dates || value}
+                    disabledDate={disabledDate}
+                    onCalendarChange={(val) => setDates(val)}
+                    onChange={(val, string) => {
+                      setDateString({
+                        NGAY_BD: string[0],
+                        NGAY_KT: string[1],
+                      });
+                      setValue(val);
+                    }}
+                    onOpenChange={onOpenChange}
+                  />
+                </Col>
+                <Col span={24}>
+                  {isNotMonday() && (
+                    <div className="date-msg">
+                      Cảnh Báo: Ngày Bắt Đầu Không Là Thứ 2
+                    </div>
+                  )}
+                  {isNotSunday() && (
+                    <div className="date-msg">
+                      Cảnh Báo: Ngày Kết Thúc Không Là Chủ Nhật
+                    </div>
+                  )}
+                </Col>
+              </Row>
+              <Row justify="end">
+                <Button
+                  onClick={handleAdd}
+                  size="large"
+                  icon={loading ? <LoadingOutlined /> : <PlusOutlined />}
+                  type="primary"
+                  disabled={!valid}
+                >
+                  Tạo
+                </Button>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 };

@@ -18,6 +18,7 @@ export default function Navbar() {
           } else {
             return (
               <NavLink
+                key={router.path}
                 className={({ isActive }) =>
                   isActive ? "nav-link-container active" : "nav-link-container"
                 }

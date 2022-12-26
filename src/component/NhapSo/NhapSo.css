@@ -1,5 +1,7 @@
 .info-card-heading {
   text-align: center;
+  font-size: 30px;
+  color: var(--darkblue);
 }
 .select-container {
   display: flex;
@@ -81,10 +83,18 @@ th {
 .row-edit-container a {
   text-align: center;
 }
+.nhapsoinfo-container {
+  background-color: var(--greydarkblue);
+  height: 50vh;
+}
+.nhapsoinfo-content {
+  margin-top: 0;
+  position: relative;
+  transform: translateY(30vh);
+}
 
 @keyframes fade {
   from {
-    top: -100%;
     opacity: 0;
   }
   to {
