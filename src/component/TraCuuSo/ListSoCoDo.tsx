@@ -70,9 +70,18 @@ const ListSoCoDo: React.FC<ListSoCoDoProps> = (props) => {
         </div>
       ) : (
         <div className="listsocodo-container fadeIn">
-          <Row align="middle" justify="center" gutter={16}>
+          <div className="row-container">
+            <div className="row-heading-container">
+              <div className="row-heading">Cập nhật gần đây</div>
+            </div>
             <RowCarousel allSCD={allSCD} handleCardClick={handleCardClick} />
-          </Row>
+          </div>
+          <div className="row-container">
+            <div className="row-heading-container">
+              <div className="row-heading">Vi phạm nhiều nhất</div>
+            </div>
+            <RowCarousel allSCD={allSCD} handleCardClick={handleCardClick} />
+          </div>
         </div>
       )}
     </>

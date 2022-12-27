@@ -3,13 +3,21 @@
   font-size: 30px;
   color: var(--darkblue);
 }
+.nhapsoinfo-container {
+  background-color: var(--greydarkblue);
+  height: 50vh;
+}
+.nhapsoinfo-content {
+  position: relative;
+  transform: translateY(30vh);
+}
 .select-container {
   display: flex;
   justify-content: center;
 }
 .card {
   position: relative;
-  animation: fade 0.6s ease-in-out;
+  animation: fadeIn 0.6s ease-in-out;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
 }
 .card-row {
@@ -83,22 +91,12 @@ th {
 .row-edit-container a {
   text-align: center;
 }
-.nhapsoinfo-container {
-  background-color: var(--greydarkblue);
-  height: 50vh;
-}
-.nhapsoinfo-content {
-  margin-top: 0;
-  position: relative;
-  transform: translateY(30vh);
-}
 
-@keyframes fade {
+@keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
-    top: 0;
     opacity: 1;
   }
 }
