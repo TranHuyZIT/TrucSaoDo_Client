@@ -49,6 +49,7 @@
   border-radius: 24px;
 }
 .list-card {
+  max-width: 400px;
   width: 100%;
   background-color: white;
 }
@@ -86,6 +87,8 @@
   width: 100%;
   text-transform: uppercase;
   letter-spacing: 4px;
+  color: var(--darkblue);
+  font-weight: 700;
 }
 .row-heading:before {
   position: absolute;
@@ -94,7 +97,7 @@
   width: 100px;
   height: 2px;
   content: "";
-  background-color: #c50000;
+  background-color: var(--primaryblue);
 }
 .carousel-container {
   padding: 20px;

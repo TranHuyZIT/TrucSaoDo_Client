@@ -1,6 +1,5 @@
 import { Row, Col, Card } from "antd";
 import { convertDateString } from "../../utils/commonUtils";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
 
@@ -10,61 +9,57 @@ interface SoCoDo {
   NGAY_KT: string;
   L_TEN: string;
   TUAN: number;
+  UPDATED_AT: string;
+  DIEM_TRU?: number;
 }
 interface RowCarouselProps {
   allSCD: SoCoDo[];
   handleCardClick: (scd: SoCoDo) => void;
+  title: string;
 }
 const { Meta } = Card;
-
-const ArrowButton: React.FC<{ direction: string }> = ({ direction }) => {
-  return (
-    <div className="arrow-btn">
-      {direction === "left" ? <ArrowLeftOutlined /> : <ArrowRightOutlined />}
-    </div>
-  );
-};
-
-var settings = {
-  dots: true,
-  infinite: false,
-  speed: 1000,
-  slidesToShow: 4,
-  slidesToScroll: 4,
-  initialSlide: 0,
-
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        infinite: true,
-        dots: true,
-      },
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        initialSlide: 2,
-      },
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-};
 
 const RowCarousel: React.FC<RowCarouselProps> = ({
   handleCardClick,
   allSCD,
+  title,
 }) => {
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: Math.min(4, allSCD.length),
+    slidesToScroll: Math.min(4, allSCD.length),
+    initialSlide: 0,
+    autoplay: true,
+    autoplaySpeed: 7000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: Math.min(3, allSCD.length),
+          slidesToScroll: Math.min(3, allSCD.length),
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: Math.min(2, allSCD.length),
+          slidesToScroll: Math.min(2, allSCD.length),
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
   return (
     <div className="carousel-container">
       <Slider {...settings}>
@@ -75,6 +70,7 @@ const RowCarousel: React.FC<RowCarouselProps> = ({
               onClick={() => {
                 handleCardClick(scd);
               }}
+              onMouseDown={(e) => e.preventDefault()}
               hoverable
               className="list-card"
               cover={
@@ -86,9 +82,11 @@ const RowCarousel: React.FC<RowCarouselProps> = ({
             >
               <Meta
                 title={`Sổ Lớp ${scd.L_TEN} - Tuần ${scd.TUAN} - Mã Sổ ${scd.MA_SO}`}
-                description={`${convertDateString(
-                  scd.NGAY_BD
-                )} đến ${convertDateString(scd.NGAY_KT)}`}
+                description={
+                  title === "time"
+                    ? `Cập nhật vào lúc: ${scd.UPDATED_AT}`
+                    : `Điểm Trừ: ${scd.DIEM_TRU}`
+                }
               />
             </Card>
           );

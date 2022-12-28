@@ -135,10 +135,11 @@ export default function TraCuuSo() {
           ]}
         />
         <Button
-          style={{ backgroundColor: "var(--primaryblue)" }}
+          color={"#7ba4e9"}
           type="primary"
           icon={<SearchOutlined />}
           onClick={handleSearch}
+          disabled={!(selectedLop === "Tất Cả" && selectedTuan === "Tất Cả")}
         >
           Tìm kiếm
         </Button>

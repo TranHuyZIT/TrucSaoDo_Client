@@ -39,10 +39,10 @@ export const getAllTuan = async (setData) => {
   }
 };
 
-export const findSo = async (l_ten, tuan, setData) => {
+export const findSo = async (l_ten, tuan, setData, size = "") => {
   try {
     const soResult = await axios.get(
-      `http://localhost:8800/socodo/search?l_ten=${l_ten}&tuan=${tuan}`
+      `http://localhost:8800/socodo/search?l_ten=${l_ten}&tuan=${tuan}&size=${size}`
     );
     if (setData) setData(soResult.data);
     return soResult.data;
@@ -177,9 +177,31 @@ export const saveSCDRow = async (l_ten, tuan, thu, ngayBDSo, tenHS, vipham) => {
 export const getDiemTheoTuan = async (tuan, setData) => {
   try {
     const res = await axios.get(
-      `http://localhost:8800/thongke/diemtru?tuan=${tuan}`
+      `http://localhost:8800/thongke/diemtrutuan?tuan=${tuan}`
     );
     setData(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getDiemTheoSo = async (maSo, setData) => {
+  try {
+    if (Array.isArray(maSo)) {
+      const result = [];
+      for (let ma of maSo) {
+        const res = await axios.get(
+          `http://localhost:8800/thongke/diemtruso?MA_SO=${ma.MA_SO}`
+        );
+        result.push({ ...ma, ...res.data[0] });
+      }
+      setData(result);
+      return;
+    }
+    const res = await axios.get(
+      `http://localhost:8800/thongke/diemtruso?MA_SO=${maSo}`
+    );
+    setData(res.data[0]);
   } catch (error) {
     console.log(error);
   }

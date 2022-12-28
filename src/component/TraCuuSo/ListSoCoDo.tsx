@@ -1,7 +1,15 @@
 import { Card, Col, Row } from "antd";
 import { useState, useEffect } from "react";
-import { findSo, findSoAndAllDetails } from "../../utils/apiRequest";
-import { convertDateString } from "../../utils/commonUtils";
+import {
+  findSo,
+  findSoAndAllDetails,
+  getDiemTheoSo,
+} from "../../utils/apiRequest";
+import {
+  convertDateString,
+  sortByDiem,
+  sortByTimeStamp,
+} from "../../utils/commonUtils";
 import { scdData, TitleInfo } from "./interface";
 import "./TraCuuSo.css";
 import { Spin } from "antd";
@@ -20,6 +28,12 @@ interface SoCoDo {
   NGAY_KT: string;
   L_TEN: string;
   TUAN: number;
+  UPDATED_AT: string;
+}
+interface DiemSo {
+  MA_SO: number;
+  L_TEN: string;
+  DIEM_TRU: number;
 }
 
 const ListSoCoDo: React.FC<ListSoCoDoProps> = (props) => {
@@ -32,19 +46,30 @@ const ListSoCoDo: React.FC<ListSoCoDoProps> = (props) => {
     selectedTuan,
   } = props;
   const [allSCD, setAllSCD] = useState<SoCoDo[]>([]);
+  const [diemSCD, setDiemSCD] = useState<DiemSo[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     const find = async () => {
       await findSo(
         selectedLop === "Tất Cả" ? "" : selectedLop,
         selectedTuan === "Tất Cả" ? "" : selectedTuan,
-        setAllSCD
+        setAllSCD,
+        "5"
       );
     };
     setLoading(true);
     find();
     setLoading(false);
   }, [selectedLop, selectedTuan]);
+  useEffect(() => {
+    const findDiem = async () => {
+      await getDiemTheoSo(allSCD, setDiemSCD);
+    };
+    findDiem();
+  }, [allSCD]);
+  useEffect(() => {
+    console.log(diemSCD);
+  }, [diemSCD]);
 
   const handleCardClick = (scd: SoCoDo) => {
     setSelectedLop(scd.L_TEN);
@@ -74,13 +99,21 @@ const ListSoCoDo: React.FC<ListSoCoDoProps> = (props) => {
             <div className="row-heading-container">
               <div className="row-heading">Cập nhật gần đây</div>
             </div>
-            <RowCarousel allSCD={allSCD} handleCardClick={handleCardClick} />
+            <RowCarousel
+              title="time"
+              allSCD={sortByTimeStamp(allSCD)}
+              handleCardClick={handleCardClick}
+            />
           </div>
           <div className="row-container">
             <div className="row-heading-container">
               <div className="row-heading">Vi phạm nhiều nhất</div>
             </div>
-            <RowCarousel allSCD={allSCD} handleCardClick={handleCardClick} />
+            <RowCarousel
+              title="mark"
+              allSCD={sortByDiem(diemSCD)}
+              handleCardClick={handleCardClick}
+            />
           </div>
         </div>
       )}

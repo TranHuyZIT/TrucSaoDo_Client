@@ -1,4 +1,4 @@
-import { Button, Col, Row, Select, Statistic } from "antd";
+import { Button, Col, Row, Select, Statistic, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import { getAllLop, getAllTuan, getDiemTheoTuan } from "../../utils/apiRequest";
 import { lop, tuan } from "../TraCuuSo/interface";
@@ -9,7 +9,18 @@ interface DiemTruTuan {
   L_TEN: string;
   DIEM_TRU: number;
 }
-
+const columnsTable = [
+  {
+    title: "Lớp",
+    dataIndex: "lop",
+    key: "lop",
+  },
+  {
+    title: "Điểm",
+    dataIndex: "diem",
+    key: "diem",
+  },
+];
 interface ThongKeProps {}
 const ThongKe: React.FC<ThongKeProps> = (props) => {
   const [lopList, setLopList] = useState<lop[]>([]);
@@ -63,80 +74,99 @@ const ThongKe: React.FC<ThongKeProps> = (props) => {
           />
         </div>
         <div className="stat-container">
-          <section>
-            <Row>
-              <h2>Lớp Xuất Sắc Nhất</h2>
-            </Row>
-            <Row justify="center" align="middle" gutter={16}>
-              <Col span={6}>
-                <Statistic
-                  title="Lớp"
-                  value={diemTruTuan[0]?.L_TEN}
-                  prefix={<ReadOutlined />}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="Tổng Điểm"
-                  value={diemTruTuan[0] ? 100 - +diemTruTuan[0].DIEM_TRU : 0}
-                  suffix="/ 100"
-                />
-              </Col>
-              <Col span={6}>
-                <Button
-                  disabled={diemTruTuan.length === 0}
-                  onClick={() => {
-                    handleDetailClick(
-                      diemTruTuan[0]?.L_TEN,
-                      selectedTuan.TUAN.toString()
-                    );
-                  }}
-                  type="primary"
-                >
-                  Xem Chi Tiết
-                </Button>
-              </Col>
-            </Row>
-          </section>
-          <section>
-            <Row>
-              <h2>Lớp Vi Phạm Nhiều Nhất</h2>
-            </Row>
-            <Row justify="center" align="middle" gutter={16}>
-              <Col span={6}>
-                <Statistic
-                  title="Lớp"
-                  value={diemTruTuan[diemTruTuan.length - 1]?.L_TEN}
-                  prefix={<ReadOutlined />}
-                />
-              </Col>
-              <Col span={6}>
-                <Statistic
-                  title="Tổng Điểm"
-                  value={
-                    diemTruTuan[diemTruTuan.length - 1]
-                      ? 100 - +diemTruTuan[diemTruTuan.length - 1].DIEM_TRU
-                      : 0
-                  }
-                  suffix="/ 100"
-                />
-              </Col>
-              <Col span={6}>
-                <Button
-                  disabled={diemTruTuan.length === 0}
-                  onClick={() => {
-                    handleDetailClick(
-                      diemTruTuan[diemTruTuan.length - 1]?.L_TEN,
-                      selectedTuan.TUAN.toString()
-                    );
-                  }}
-                  type="primary"
-                >
-                  Xem Chi Tiết
-                </Button>
-              </Col>
-            </Row>
-          </section>
+          <Row align="middle" gutter={[16, 0]}>
+            <Col lg={12}>
+              <section>
+                <Row>
+                  <h2>Lớp Xuất Sắc Nhất</h2>
+                </Row>
+                <Row align="middle" gutter={16}>
+                  <Col span={8}>
+                    <Statistic
+                      title="Lớp"
+                      value={diemTruTuan[0]?.L_TEN}
+                      prefix={<ReadOutlined />}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <Statistic
+                      title="Tổng Điểm"
+                      value={
+                        diemTruTuan[0] ? 100 - +diemTruTuan[0].DIEM_TRU : 0
+                      }
+                      suffix="/ 100"
+                    />
+                  </Col>
+                  <Col span={2}>
+                    <Button
+                      disabled={diemTruTuan.length === 0}
+                      onClick={() => {
+                        handleDetailClick(
+                          diemTruTuan[0]?.L_TEN,
+                          selectedTuan.TUAN.toString()
+                        );
+                      }}
+                      type="primary"
+                    >
+                      Xem
+                    </Button>
+                  </Col>
+                </Row>
+              </section>
+              <section>
+                <Row>
+                  <h2>Lớp Vi Phạm Nhiều Nhất</h2>
+                </Row>
+                <Row align="middle" gutter={16} style={{ width: "`100%" }}>
+                  <Col span={8}>
+                    <Statistic
+                      title="Lớp"
+                      value={diemTruTuan[diemTruTuan.length - 1]?.L_TEN}
+                      prefix={<ReadOutlined />}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <Statistic
+                      title="Tổng Điểm"
+                      value={
+                        diemTruTuan[diemTruTuan.length - 1]
+                          ? 100 - +diemTruTuan[diemTruTuan.length - 1].DIEM_TRU
+                          : 0
+                      }
+                      suffix="/ 100"
+                    />
+                  </Col>
+                  <Col span={2}>
+                    <Button
+                      disabled={diemTruTuan.length === 0}
+                      onClick={() => {
+                        handleDetailClick(
+                          diemTruTuan[diemTruTuan.length - 1]?.L_TEN,
+                          selectedTuan.TUAN.toString()
+                        );
+                      }}
+                      type="primary"
+                    >
+                      Xem
+                    </Button>
+                  </Col>
+                </Row>
+              </section>
+            </Col>
+            <Col lg={12}>
+              <Table
+                pagination={false}
+                dataSource={diemTruTuan.map((diemLop) => {
+                  return {
+                    key: diemLop.L_TEN,
+                    lop: diemLop.L_TEN,
+                    diem: 100 - +diemLop.DIEM_TRU,
+                  };
+                })}
+                columns={columnsTable}
+              />
+            </Col>
+          </Row>
         </div>
       </div>
     </div>
