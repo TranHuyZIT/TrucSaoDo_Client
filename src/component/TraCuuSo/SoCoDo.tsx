@@ -88,7 +88,7 @@ const SoCoDo: React.FC<SoCoDoProps> = (props) => {
           .map((vp: vp) => {
             return {
               title: vp.TEN,
-              dataIndex: ["data", `3_${vp.VP_MA}`],
+              dataIndex: ["data", `2_${vp.VP_MA}`],
               width: "5%",
               editable: true,
             };

@@ -59,22 +59,22 @@ const ListSoCoDo: React.FC<ListSoCoDoProps> = (props) => {
     };
     setLoading(true);
     find();
-    setLoading(false);
   }, [selectedLop, selectedTuan]);
   useEffect(() => {
     const findDiem = async () => {
       await getDiemTheoSo(allSCD, setDiemSCD);
+      setLoading(false);
     };
-    findDiem();
+    if (allSCD.length > 0) findDiem();
   }, [allSCD]);
-  useEffect(() => {
-    console.log(diemSCD);
-  }, [diemSCD]);
 
-  const handleCardClick = (scd: SoCoDo) => {
+  const handleCardClick = async (scd: SoCoDo) => {
+    setLoading(true);
+    await findSoAndAllDetails(scd.L_TEN, scd.TUAN, setSCDData);
+    setLoading(false);
+
     setSelectedLop(scd.L_TEN);
     setSelectedTuan("" + scd.TUAN);
-    findSoAndAllDetails(scd.L_TEN, scd.TUAN, setSCDData);
     setTitleInfo({
       tenLop: scd.L_TEN,
       tuan: scd.TUAN,

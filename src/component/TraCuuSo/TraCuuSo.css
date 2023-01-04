@@ -103,6 +103,10 @@
   padding: 20px;
   box-sizing: border-box;
 }
+.slick-slide > div {
+  display: flex;
+  justify-content: center;
+}
 /* Animations */
 .fadeIn {
   animation-name: fadeIn;

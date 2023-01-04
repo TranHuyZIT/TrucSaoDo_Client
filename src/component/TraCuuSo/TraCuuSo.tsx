@@ -40,7 +40,6 @@ export default function TraCuuSo() {
         tuan: +selectedTuan,
       });
     };
-    console.log(lopParam, tuanParam);
     if (lopParam) setSelectedLop(lopParam);
     if (tuanParam) setSelectedTuan(tuanParam);
     if (lopParam && tuanParam) {
@@ -75,10 +74,6 @@ export default function TraCuuSo() {
       tuan: +selectedTuan,
     });
   };
-
-  useEffect(() => {
-    console.log(scdData);
-  }, [scdData]);
 
   useEffect(() => {
     getAllLop(setLopList);
@@ -135,11 +130,11 @@ export default function TraCuuSo() {
           ]}
         />
         <Button
-          color={"#7ba4e9"}
+          style={{ backgroundColor: "var(--primaryblue)" }}
           type="primary"
           icon={<SearchOutlined />}
           onClick={handleSearch}
-          disabled={!(selectedLop === "Tất Cả" && selectedTuan === "Tất Cả")}
+          disabled={selectedLop === "Tất Cả" && selectedTuan === "Tất Cả"}
         >
           Tìm kiếm
         </Button>
