@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, InputNumber, Popconfirm, Table, Typography } from "antd";
 import { getAllViPham } from "../../utils/apiRequest";
 import { Item, scdDataInfo, SoCoDoProps, vp } from "./interface";
+import { log } from "console";
 
 const SoCoDo: React.FC<SoCoDoProps> = (props) => {
   const [form] = Form.useForm();
@@ -25,7 +26,12 @@ const SoCoDo: React.FC<SoCoDoProps> = (props) => {
       });
     }
     for (let dataDay of info.result) {
+      const total = dataDay.vipham.reduce((total, value) => {
+        if (!value.DIEM_TRU) return total;
+        return total + value.DIEM_TRU * value.SO_LUONG;
+      }, 0);
       originData[dataDay.day - 2].tenHS = dataDay.tenHS;
+      originData[dataDay.day - 2].total = total;
       for (let ctvp of dataDay.vipham) {
         originData[dataDay.day - 2].data[`${ctvp.LVP_MA}_${ctvp.VP_MA}`] =
           ctvp.SO_LUONG;
@@ -103,7 +109,7 @@ const SoCoDo: React.FC<SoCoDoProps> = (props) => {
     },
     {
       title: "TỔNG CỘNG",
-      dataIndex: "address",
+      dataIndex: "total",
       width: "5%",
       editable: false,
     },

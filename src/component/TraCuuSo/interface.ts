@@ -28,6 +28,7 @@ export interface scdDataDay {
     VP_MA: number;
     MA_SO: number;
     SO_LUONG: number;
+    DIEM_TRU?: number;
   }[];
 }
 
@@ -36,6 +37,7 @@ export interface Item {
   key: string;
   day: number;
   tenHS: string;
+  total?: number;
   data: {
     [key: string]: number;
   };

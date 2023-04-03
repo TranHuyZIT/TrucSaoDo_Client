@@ -12,6 +12,7 @@ export interface scdDataDay {
   day: number;
   tenHS: string;
   vipham: {
+    DIEM_TRU?: number;
     NGAY: string;
     LVP_MA: number;
     VP_MA: number;

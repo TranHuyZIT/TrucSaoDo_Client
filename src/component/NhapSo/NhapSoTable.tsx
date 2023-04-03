@@ -13,7 +13,7 @@ import { FC, useState, useEffect } from "react";
 import { lvp, soInnfo } from "./interface";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { saveSCDRow } from "../../utils/apiRequest";
+import { getAllViPham, saveSCDRow } from "../../utils/apiRequest";
 
 const { Column, ColumnGroup } = Table;
 const { RangePicker } = DatePicker;
@@ -32,6 +32,7 @@ interface Item {
   key: string;
   day: number;
   tenHS: string;
+  total?: number;
   data: {
     [keyData: string]: number;
   };
@@ -146,6 +147,8 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
       const row = (await form.validateFields()) as Item;
 
       const newData: Item[] = [...scdData];
+      console.log(newData);
+
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const item = newData[index];
@@ -157,19 +160,22 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
           ...item,
           ...row,
         });
-        setSCDData(newData);
+
         setEditingKey("");
         let vp = [];
         const currentRow = newData[index];
+        let total = 0;
         for (let keyVP in currentRow.data) {
           const [LVP_MA, VP_MA] = keyVP.split("_");
           if (currentRow.data[keyVP]) {
+            total += allViPham.find((vp) => vp.VP_MA == VP_MA)?.DIEM_TRU || 0;
             vp.push({ VP_MA: VP_MA, SO_LUONG: currentRow.data[keyVP] });
           } else {
             vp.push({ VP_MA: VP_MA, SO_LUONG: 0 });
           }
         }
-
+        newData[index].total = total;
+        setSCDData(newData);
         saveSCDRow(
           data.info.L_ten,
           data.info.tuan,
@@ -187,9 +193,13 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
       console.log("Validate Failed:", errInfo);
     }
   };
+  const [allViPham, setAllViPham] = useState([]);
 
   useEffect(() => {
-    console.log(data);
+    const getViPhams = async () => {
+      await getAllViPham(setAllViPham);
+    };
+    getViPhams();
     const originData: Item[] = [];
     for (let i = 2; i <= 6; i++) {
       originData.push({
@@ -201,6 +211,13 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
     }
     for (let dataDay of data.info.result) {
       originData[dataDay.day - 2].tenHS = dataDay.tenHS;
+      originData[dataDay.day - 2].total = dataDay.vipham.reduce(
+        (total, value) => {
+          if (!value.DIEM_TRU) return total;
+          return total + value.DIEM_TRU * value.SO_LUONG;
+        },
+        0
+      );
       for (let ctvp of dataDay.vipham) {
         originData[dataDay.day - 2].data[`${ctvp.LVP_MA}_${ctvp.VP_MA}`] =
           ctvp.SO_LUONG;
@@ -287,7 +304,7 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
               editing: isEditing(record),
             })}
           />
-          <Column title="TỔNG CỘNG" />
+          <Column title="TỔNG CỘNG" dataIndex="total" />
           <Column
             title="Chỉnh sửa"
             render={(_: any, record: Item) => {
@@ -326,12 +343,6 @@ const NhapSoTable: FC<NhapSoTableProps> = (props) => {
             }}
           >
             Quay Lại
-          </Button>
-          <Button size="large" className="button" danger type="primary">
-            Xóa
-          </Button>
-          <Button size="large" className="button" type="primary">
-            Lưu
           </Button>
         </div>
       </Form>
